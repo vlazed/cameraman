@@ -34,6 +34,16 @@ local pauseInterval = CreateClientConVar("cameraman_pauselength", "5", true, tru
 local pauseRandomness = CreateClientConVar("cameraman_pauselength", "5", true, true)
 local randomSeed = CreateClientConVar("cameraman_seed", "1", true, true)
 
+local standingHeight = CreateClientConVar("cameraman_standheight", "66", true, true) -- u
+local crouchingHeight = CreateClientConVar("cameraman_crouchheight", "33", true, true) -- u
+local proneHeight = CreateClientConVar("cameraman_proneheight", "10", true, true) -- u
+local acceleration = CreateClientConVar("cameraman_acceleration", "10", true, true) -- u/s/s
+local deceleration = CreateClientConVar("cameraman_deceleration", "10", true, true) -- u/s/s
+local walkSpeed = CreateClientConVar("cameraman_walkspeed", "66", true, true) -- u/s
+local runSpeed = CreateClientConVar("cameraman_runspeed", "120", true, true) -- u/s
+local sprintSpeed = CreateClientConVar("cameraman_sprintspeed", "240", true, true) -- u/s
+local gravity = CreateClientConVar("cameraman_gravity", "60", true, true) -- u/s/s
+
 ---Helper for DForm
 ---@param cPanel ControlPanel|DForm
 ---@param name string
@@ -57,7 +67,7 @@ local function options(cpanel)
 	universalSettings:NumSlider("Motion Scale", "cameraman_motionscale", 0, 2, 2)
 	universalSettings:NumSlider("Speed Scale", "cameraman_speedscale", 0, 2, 2)
 
-	universalSettings:Help("Shake Quality")
+	universalSettings:Help("Shake Levels")
 	universalSettings:NumSlider("Pan Amplitude", "cameraman_panamplitude", 0, 10, 2)
 	universalSettings:NumSlider("Tilt Amplitude", "cameraman_tiltamplitude", 0, 10, 2)
 	universalSettings:NumSlider("Rotation Amplitude", "cameraman_rotamplitude", 0, 10, 2)
@@ -66,6 +76,8 @@ local function options(cpanel)
 	universalSettings:NumSlider("Zoom Speed", "cameraman_zoomspeed", 0, 10, 2)
 
 	universalSettings:Help("Shake Quality")
+	local combo = universalSettings:ComboBox("Motion Method", "cameraman_motionmethod")
+	---@cast combo DComboBox
 	universalSettings:NumSlider("Phase", "cameraman_phase", 0, 10, 2)
 	universalSettings:NumSlider("Randomness Scale", "cameraman_randomscale", 0, 10, 2)
 	universalSettings:NumSlider("Randomness Speed", "cameraman_randomspeed", 0, 10, 2)
@@ -73,6 +85,23 @@ local function options(cpanel)
 	universalSettings:NumSlider("Pause Interval", "cameraman_pauselength", 0, 10, 2)
 	universalSettings:NumSlider("Pause Randomness", "cameraman_pauselength", 0, 10, 2)
 	universalSettings:NumberWang("Random Seed", "cameraman_seed", 0, 10000)
+
+	local choices = {}
+	for _, method in ipairs(methods) do
+		local i = combo:AddChoice(method, method, false)
+		choices[i] = method
+	end
+	combo:ChooseOptionID(next(choices))
+
+	handheldSettings:NumSlider("Stand Height", "cameraman_standheight", 0, 100, 2)
+	handheldSettings:NumSlider("Crouch Height", "cameraman_crouchheight", 0, 50, 2)
+	handheldSettings:NumSlider("Prone Height", "cameraman_proneheight", 0, 25, 2)
+	handheldSettings:NumSlider("Acceleration", "cameraman_acceleration", 0, 100)
+	handheldSettings:NumSlider("Deceleration", "cameraman_deceleration", 0, 100)
+	handheldSettings:NumSlider("Walk Speed", "cameraman_walkspeed", 10, 100)
+	handheldSettings:NumSlider("Run Speed", "cameraman_runspeed", 100, 200)
+	handheldSettings:NumSlider("Sprint Speed", "cameraman_sprintspeed", 200, 300)
+	handheldSettings:NumSlider("Gravity", "cameraman_gravity", 60, 300)
 end
 
 hook.Remove("PopulateToolMenu", "vlazed_camera_options")

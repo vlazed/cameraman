@@ -6,8 +6,8 @@ local cameraClasses = {
 }
 
 local driveModes = {
-	{ "drive_drone", "Drone", "icon16/joystick.png" },
-	{ "drive_handheld", "Handheld", "icon16/joystick.png" },
+	{ "drive_drone", "Drone", "icon16/vector.png" },
+	{ "drive_handheld", "Handheld", "icon16/camera.png" },
 }
 
 local function addCameraDriveMode(driveInfo, count)
